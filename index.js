@@ -96,6 +96,12 @@ async function run() {
       const result=await orderCollection.updateOne({_id:new ObjectId(id)},{$set:{status:status}});
       res.send(result);
     })
+    app.delete('/orders/:id',async(req,res)=>{
+      const id=req.params.id;
+      const query={_id:new ObjectId(id)}
+      const result=await orderCollection.deleteOne(query);
+      res.send(result);
+    })  
     // jwt token
     app.post('/jwt',(req,res)=>{
       const user=req.body;
