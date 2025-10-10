@@ -102,6 +102,17 @@ async function run() {
       const result=await orderCollection.deleteOne(query);
       res.send(result);
     })  
+    app.get('/orders/chef/:email',async(req,res)=>{
+      const email=req.params.email;
+      const orders=await orderCollection.find().toArray();
+      res.send(orders);
+    })
+    app.patch('/orders/chef/:id',async(req,res)=>{
+      const id=req.params.id;
+      const {status}=req.body;
+      const result=await orderCollection.updateOne({_id:new ObjectId(id)},{$set:{status:status}});
+      res.send(result);
+    })
     // jwt token
     app.post('/jwt',(req,res)=>{
       const user=req.body;
@@ -124,6 +135,18 @@ async function run() {
       const query={email:email};
       const user=await userCollection.findOne(query);
       res.send({role:user?.role});
+    })
+    app.patch('/users/:id',async(req,res)=>{
+      const id=req.params.id;
+      const role=req.body.role;
+      const result=await userCollection.updateOne({_id:new ObjectId(id)},{$set:{role:role}});
+      res.send(result);
+    })
+    app.delete('/users/:id',async(req,res)=>{
+      const id=req.params.id;
+      const query={_id:new ObjectId(id)}
+      const result=await userCollection.deleteOne(query);
+      res.send(result);
     })
     
     await client.db("admin").command({ ping: 1 });
